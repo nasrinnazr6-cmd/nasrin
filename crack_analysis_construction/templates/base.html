@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Elevate Constructors{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    {% include "header.html" %}
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="container" style="margin-bottom: 0;">
+                {% for category, message in messages %}
+                    <div class="alert {{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+
+    <footer class="site-footer">
+        <div class="footer-grid">
+            <div>
+                <h2>Elevate Constructors</h2>
+                <p>Modern construction management with blue-white clarity, project oversight, and AI-assisted crack inspection.</p>
+                <div class="social-row">
+                    <span><i class="fa-brands fa-facebook-f"></i></span>
+                    <span><i class="fa-brands fa-instagram"></i></span>
+                    <span><i class="fa-brands fa-linkedin-in"></i></span>
+                    <span><i class="fa-brands fa-x-twitter"></i></span>
+                </div>
+            </div>
+            <div>
+                <h3>Company</h3>
+                <a href="{{ url_for('about') }}">About Us</a>
+                <a href="{{ url_for('engineers') }}">Our Team</a>
+                <a href="{{ url_for('projects') }}">Projects</a>
+            </div>
+            <div>
+                <h3>Services</h3>
+                <a href="{{ url_for('services') }}">Construction</a>
+                <a href="{{ url_for('detect') }}">Crack Analysis</a>
+                <a href="{{ url_for('analytics') }}">Reports</a>
+            </div>
+            <div>
+                <h3>Support</h3>
+                <a href="{{ url_for('contact') }}">Contact Us</a>
+                <a href="{{ url_for('history') }}">History</a>
+                <a href="{{ url_for('profile') }}">Profile</a>
+            </div>
+            <div>
+                <h3>Let's Connect</h3>
+                <a class="btn" href="{{ url_for('contact') }}">Get In Touch</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 Elevate Constructors. All rights reserved.
+        </div>
+    </footer>
+</body>
+
+</html>
+
+

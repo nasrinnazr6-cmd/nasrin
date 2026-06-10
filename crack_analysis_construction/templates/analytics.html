@@ -1,0 +1,119 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics - Elevate Constructors</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+
+    <nav class="navbar">
+
+        <a href="{{ url_for('home') }}" class="logo">
+            <i class="fa-solid fa-microchip"></i> Elevate Constructors
+        </a>
+
+        <ul class="nav-links">
+            <li><a href="{{ url_for('home') }}">Home</a></li>
+            <li><a href="{{ url_for('about') }}">About</a></li>
+            <li><a href="{{ url_for('contact') }}">Contact</a></li>
+            <li><a href="{{ url_for('history') }}">History</a></li>
+            <li><a href="{{ url_for('analytics') }}">Analytics</a></li>
+            <li>
+                <a href="{{ url_for('profile') }}" class="nav-profile">
+                    {% if current_profile and current_profile["img"] %}
+                        <img src="/{{ current_profile['img'] }}" class="nav-avatar" alt="Profile">
+                    {% else %}
+                        <span class="nav-avatar-placeholder"><i class="fa-solid fa-user"></i></span>
+                    {% endif %}
+                    {{ current_profile["name"] or current_profile["username"] if current_profile else current_user }}
+                </a>
+            </li>
+            <li>
+                <a href="{{ url_for('logout') }}"
+                   style="color: #e74c3c;">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    Logout
+                </a>
+            </li>
+        </ul>
+
+    </nav>
+
+    <div class="container" style="max-width: 1100px;">
+
+        <div style="margin-bottom: 25px;">
+            <h1>Prediction Analytics</h1>
+            <p style="color: #666;">
+                Visual summary generated from saved database records.
+            </p>
+        </div>
+
+        <div style="
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        ">
+
+            <div class="card">
+                <i class="fa-solid fa-database"
+                   style="font-size: 2rem; color: #2563eb;"></i>
+                <h2 style="margin-top: 10px;">{{ total_predictions }}</h2>
+                <p style="color: #666;">Total Predictions</p>
+            </div>
+
+            <div class="card">
+                <i class="fa-solid fa-chart-line"
+                   style="font-size: 2rem; color: #10b981;"></i>
+                <h2 style="margin-top: 10px;">{{ average_confidence }}%</h2>
+                <p style="color: #666;">Average Confidence</p>
+            </div>
+
+        </div>
+
+        <div style="
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+            gap: 25px;
+        ">
+
+            <div class="card" style="text-align: left;">
+                <h3 style="margin-bottom: 15px;">
+                    <i class="fa-solid fa-triangle-exclamation"
+                       style="color: #ef4444;"></i>
+                    Severity Count
+                </h3>
+
+                <img src="{{ url_for('static', filename=severity_chart) }}"
+                     alt="Severity count chart"
+                     style="width: 100%; border-radius: 6px;">
+            </div>
+
+            <div class="card" style="text-align: left;">
+                <h3 style="margin-bottom: 15px;">
+                    <i class="fa-solid fa-percent"
+                       style="color: #2563eb;"></i>
+                    Confidence History
+                </h3>
+
+                <img src="{{ url_for('static', filename=confidence_chart) }}"
+                     alt="Confidence history chart"
+                     style="width: 100%; border-radius: 6px;">
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>
+

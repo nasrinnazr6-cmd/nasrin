@@ -1,0 +1,47 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Services - Elevate Constructors{% endblock %}
+
+{% block content %}
+<section class="hero-banner compact">
+    <div class="hero-inner">
+        <h1>Services</h1>
+        <p>Commercial construction, residential projects, inspection reports, and AI-assisted crack analysis.</p>
+        <div class="breadcrumb">
+            <a href="{{ url_for('home') }}">Home</a>
+            <span>/</span>
+            <span>Services</span>
+        </div>
+    </div>
+</section>
+
+<main class="page-section">
+    <section class="service-grid">
+        <div class="card service-card">
+            <span class="number">01</span>
+            <i class="fa-solid fa-city"></i>
+            <h3>Commercial Construction</h3>
+            <p>Project planning, site tracking, concrete inspection, and structured handover support.</p>
+            <span class="card-action">Explore Service <i class="fa-solid fa-arrow-right"></i></span>
+        </div>
+        <div class="card service-card">
+            <span class="number">02</span>
+            <i class="fa-solid fa-house-chimney"></i>
+            <h3>Residential Projects</h3>
+            <p>Custom building and renovation workflows with clean project records and quality checks.</p>
+            <span class="card-action">Explore Service <i class="fa-solid fa-arrow-right"></i></span>
+        </div>
+        <div class="card service-card featured">
+            <span class="number">03</span>
+            <span class="pill">PREMIUM</span>
+            <i class="fa-solid fa-microchip"></i>
+            <h3>Crack Analysis</h3>
+            <p>AI-supported crack inspection with image uploads, confidence scores, history, and analytics.</p>
+            <a class="card-action" href="{{ url_for('crack') }}">Get Quote <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+    </section>
+</main>
+
+{% endblock %}
+
+

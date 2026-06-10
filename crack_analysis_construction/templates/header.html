@@ -1,0 +1,56 @@
+﻿<nav class="navbar">
+    <a href="{{ url_for('home') }}" class="logo">
+        <i class="fa-solid fa-building-columns"></i> Elevate Constructors
+    </a>
+
+    <ul class="nav-links">
+        <li><a href="{{ url_for('home') }}">Home</a></li>
+        <li><a href="{{ url_for('about') }}">About</a></li>
+        <li><a href="{{ url_for('services') }}">Services</a></li>
+        <li><a href="{{ url_for('projects') }}">Projects</a></li>
+
+        <li class="nav-dropdown">
+            <button class="nav-trigger" type="button">
+                Crack Analysis <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="dropdown-menu">
+                <a href="{{ url_for('crack') }}" class="primary-dropdown-action">
+                    <i class="fa-solid fa-magnifying-glass-chart"></i>
+                    Analyze Image
+                </a>
+                <a href="{{ url_for('detect') }}">AI Dashboard</a>
+                <a href="{{ url_for('history') }}">History</a>
+                <a href="{{ url_for('analytics') }}">Analytics</a>
+                <a href="{{ url_for('depth_analysis') }}">Depth Analysis</a>
+            </div>
+        </li>
+
+        <li class="nav-dropdown">
+            <button class="nav-trigger" type="button">
+                Users <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="dropdown-menu">
+                <a href="{{ url_for('customers') }}">Customers</a>
+                <a href="{{ url_for('engineers') }}">Engineers</a>
+                <a href="{{ url_for('reviews') }}">Reviews</a>
+            </div>
+        </li>
+
+        <li class="nav-dropdown">
+            <button class="nav-trigger" type="button">
+                {% if current_user %}Welcome {{ current_user }}{% else %}Account{% endif %}
+                <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="dropdown-menu">
+                {% if current_user %}
+                    <a href="{{ url_for('profile') }}">Profile</a>
+                    <a href="{{ url_for('logout') }}">Logout</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}">Login</a>
+                    <a href="{{ url_for('register') }}">Register</a>
+                {% endif %}
+            </div>
+        </li>
+    </ul>
+</nav>
+

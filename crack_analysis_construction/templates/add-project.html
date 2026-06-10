@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block title %}Add Project - Elevate Constructors{% endblock %}
+
+{% block content %}
+<section class="hero-banner compact add-project-hero">
+    <div class="hero-inner">
+        <h1>Add Project</h1>
+        <p>Create a new construction project record with client, site, foundation, and status details.</p>
+        <div class="breadcrumb">
+            <a href="{{ url_for('home') }}">Home</a>
+            <span>/</span>
+            <a href="{{ url_for('projects') }}">Projects</a>
+            <span>/</span>
+            <span>Add</span>
+        </div>
+    </div>
+</section>
+
+<main class="page-section add-project-page">
+    <div class="section-head">
+        <div>
+            <p class="section-kicker">New Record</p>
+            <h2>Project Details</h2>
+        </div>
+        <a class="btn btn-secondary" href="{{ url_for('projects') }}">
+            <i class="fa-solid fa-arrow-left"></i>
+            Back to Projects
+        </a>
+    </div>
+
+    <section class="form-panel">
+        <form method="POST" action="{{ url_for('add_project') }}">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Project Name</label>
+                    <input type="text" name="pname" value="{{ project.get('pname', '') }}" placeholder="Green Heights Apartment" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Category</label>
+                    <select name="pcat">
+                        {% set selected_pcat = project.get('pcat', '') %}
+                        <option value="Residential" {% if selected_pcat == 'Residential' %}selected{% endif %}>Residential</option>
+                        <option value="Commercial" {% if selected_pcat == 'Commercial' %}selected{% endif %}>Commercial</option>
+                        <option value="Infrastructure" {% if selected_pcat == 'Infrastructure' %}selected{% endif %}>Infrastructure</option>
+                        <option value="Industrial" {% if selected_pcat == 'Industrial' %}selected{% endif %}>Industrial</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Project Type</label>
+                    <input type="text" name="ptype" value="{{ project.get('ptype', '') }}" placeholder="Multi-storey Building">
+                </div>
+
+                <div class="form-group">
+                    <label>Status</label>
+                    {% set selected_status = project.get('status', 'Planning') %}
+                    <select name="status">
+                        <option value="Planning" {% if selected_status == 'Planning' %}selected{% endif %}>Planning</option>
+                        <option value="Ongoing" {% if selected_status == 'Ongoing' %}selected{% endif %}>Ongoing</option>
+                        <option value="Inspection" {% if selected_status == 'Inspection' %}selected{% endif %}>Inspection</option>
+                        <option value="Completed" {% if selected_status == 'Completed' %}selected{% endif %}>Completed</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Client</label>
+                    <input type="text" name="client" value="{{ project.get('client', '') }}" placeholder="Client or company name" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Location</label>
+                    <input type="text" name="location" value="{{ project.get('location', '') }}" placeholder="City or site location" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Duration</label>
+                    <input type="text" name="duration" value="{{ project.get('duration', '') }}" placeholder="18 Months">
+                </div>
+
+                <div class="form-group">
+                    <label>Area</label>
+                    <input type="text" name="area" value="{{ project.get('area', '') }}" placeholder="42,000 sq.ft">
+                </div>
+
+                <div class="form-group">
+                    <label>Building Height</label>
+                    <input type="text" name="bheight" value="{{ project.get('bheight', '') }}" placeholder="12 Floors">
+                </div>
+
+                <div class="form-group">
+                    <label>Foundation Type</label>
+                    <input type="text" name="ftype" value="{{ project.get('ftype', '') }}" placeholder="Raft Foundation">
+                </div>
+
+                <div class="form-group">
+                    <label>Foundation Material</label>
+                    <input type="text" name="fmaterial" value="{{ project.get('fmaterial', '') }}" placeholder="Reinforced Concrete">
+                </div>
+
+                <div class="form-group">
+                    <label>Engineer Rate</label>
+                    <input type="text" name="erate" value="{{ project.get('erate', '') }}" placeholder="92%">
+                </div>
+
+                <div class="form-group form-wide">
+                    <label>Project Space</label>
+                    <input type="text" name="pspace" value="{{ project.get('pspace', '') }}" placeholder="Parking, lift, garden">
+                </div>
+
+                <div class="form-group form-wide">
+                    <label>Short Description</label>
+                    <textarea name="sdesc" rows="3" placeholder="Brief project summary">{{ project.get('sdesc', '') }}</textarea>
+                </div>
+
+                <div class="form-group form-wide">
+                    <label>Project Overview</label>
+                    <textarea name="poverview" rows="4" placeholder="Inspection and construction overview">{{ project.get('poverview', '') }}</textarea>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn">
+                    <i class="fa-solid fa-plus"></i>
+                    Add Project
+                </button>
+            </div>
+        </form>
+    </section>
+</main>
+{% endblock %}

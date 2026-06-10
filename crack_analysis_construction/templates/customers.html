@@ -1,0 +1,60 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Customers - Elevate Constructors{% endblock %}
+
+{% block content %}
+<section class="hero-banner compact">
+    <div class="hero-inner">
+        <h1>Customers</h1>
+        <p>Registered users and inspection customers are listed here for quick admin review.</p>
+        <div class="breadcrumb">
+            <a href="{{ url_for('home') }}">Home</a>
+            <span>/</span>
+            <span>Customers</span>
+        </div>
+    </div>
+</section>
+
+<main class="page-section">
+    <section class="modal-card" style="padding: 30px;">
+        <div class="section-head">
+            <div>
+                <p class="section-kicker">Users</p>
+                <h2>Customer Records</h2>
+            </div>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Sl No</th>
+                        <th>Name</th>
+                        <th>E-mail</th>
+                        <th>Contact</th>
+                        <th>Address</th>
+                        <th>Username</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for customer in customers %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ customer["name"] or "Not added" }}</td>
+                            <td>{{ customer["email"] or "Not added" }}</td>
+                            <td>{{ customer["contact"] or "Not added" }}</td>
+                            <td>{{ customer["address"] or "Not added" }}</td>
+                            <td>{{ customer["username"] }}</td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="6">No customers registered yet.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+{% endblock %}
+

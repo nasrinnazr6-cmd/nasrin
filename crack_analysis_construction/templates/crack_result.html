@@ -1,0 +1,175 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Crack Result - Elevate Constructors{% endblock %}
+
+{% block content %}
+<section class="hero-banner compact">
+    <div class="hero-inner">
+        <h1>Crack Result</h1>
+        <p>Real image measurement from the uploaded surface photo.</p>
+        <div class="breadcrumb">
+            <a href="{{ url_for('home') }}">Home</a>
+            <span>/</span>
+            <a href="{{ url_for('crack') }}">Crack Analysis</a>
+            <span>/</span>
+            <span>Result</span>
+        </div>
+    </div>
+</section>
+
+<main class="page-section">
+    {% if prediction and depth_forecast %}
+        <section class="card" style="text-align: left;">
+            <div class="section-head">
+                <div>
+                    <p class="section-kicker">Step 1</p>
+                    <h2>Crack Detection Result</h2>
+                </div>
+                <span class="pill">{{ prediction["avg_depths"] }}</span>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; margin-bottom: 26px;">
+                <div class="card" style="padding: 18px; text-align: left;">
+                    <p class="section-kicker">Status</p>
+                    <h3>{{ prediction["pred_result"] }}</h3>
+                </div>
+                <div class="card" style="padding: 18px; text-align: left;">
+                    <p class="section-kicker">Confidence</p>
+                    <h3>{{ prediction["confidence"] }}%</h3>
+                </div>
+                <div class="card" style="padding: 18px; text-align: left;">
+                    <p class="section-kicker">Date</p>
+                    <h3>{{ prediction["date_time"] }}</h3>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
+                <div>
+                    <h3>Original Image</h3>
+                    <img src="/{{ prediction['orginal_image'] }}" alt="Original upload" style="width: 100%; border-radius: 8px; margin-top: 10px;">
+                </div>
+                <div>
+                    <h3>Detected Crack Image</h3>
+                    <img src="/{{ prediction['pred_image'] }}" alt="Predicted crack result" style="width: 100%; border-radius: 8px; margin-top: 10px;">
+                </div>
+            </div>
+        </section>
+
+        <section class="card" style="text-align: left; margin-top: 30px;">
+            <div class="section-head">
+                <div>
+                    <p class="section-kicker">Step 2</p>
+                    <h2>Real Image Measurements</h2>
+                </div>
+                <span class="pill">{{ depth_forecast.measurement_risk }}</span>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px;">
+                <div class="card" style="text-align: left; padding: 20px;">
+                    <p class="section-kicker">Crack Area</p>
+                    <h2>{{ depth_forecast.crack_pixels }}</h2>
+                    <p class="muted-text">pixels detected as crack-like edges</p>
+                </div>
+                <div class="card" style="text-align: left; padding: 20px;">
+                    <p class="section-kicker">Coverage</p>
+                    <h2>{{ depth_forecast.coverage_percent }}%</h2>
+                    <p class="muted-text">of resized image area</p>
+                </div>
+                <div class="card" style="text-align: left; padding: 20px;">
+                    <p class="section-kicker">Regions</p>
+                    <h2>{{ depth_forecast.component_count }}</h2>
+                    <p class="muted-text">connected crack-like components</p>
+                </div>
+                <div class="card" style="text-align: left; padding: 20px;">
+                    <p class="section-kicker">Max Width</p>
+                    <h2>{{ depth_forecast.max_crack_width_px }} px</h2>
+                    <p class="muted-text">maximum detected crack width in pixels</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="card" style="text-align: left; margin-top: 30px;">
+            <div class="section-head">
+                <div>
+                    <p class="section-kicker">Step 3</p>
+                    <h2>Depth Analysis</h2>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px;">
+                <div class="card" style="text-align: left;">
+                    <i class="fa-solid fa-ruler-vertical" style="font-size: 2rem; color: #2563eb;"></i>
+                    <h3 style="margin-top: 14px;">Depth Score</h3>
+                    {% if depth_forecast.depth_available %}
+                        <h2>{{ depth_forecast.current_depth_score }}</h2>
+                    {% endif %}
+                    <p class="muted-text">{{ depth_forecast.depth_message }}</p>
+                </div>
+                <div class="card" style="text-align: left;">
+                    <i class="fa-solid fa-timeline" style="font-size: 2rem; color: #2563eb;"></i>
+                    <h3 style="margin-top: 14px;">Future Risk Trend</h3>
+                    <p class="muted-text">{{ depth_forecast.future_message }}</p>
+                    {% if depth_forecast.future_available %}
+                        <div class="table-wrap" style="margin-top: 12px;">
+                            <table>
+                                <thead><tr><th>Year</th><th>Score</th></tr></thead>
+                                <tbody>
+                                    {% for item in depth_forecast.forecast %}
+                                        <tr><td>{{ item.years }}</td><td>{{ item.score }}</td></tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="table-wrap" style="margin-top: 24px;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Result Type</th>
+                            <th>Status</th>
+                            <th>Why</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Crack detection</td>
+                            <td>Real image processing</td>
+                            <td>Calculated from the uploaded construction surface image.</td>
+                        </tr>
+                        <tr>
+                            <td>Crack width / area</td>
+                            <td>Real image measurement</td>
+                            <td>Measured from the detected crack region.</td>
+                        </tr>
+                        <tr>
+                            <td>Depth risk score</td>
+                            <td>{% if depth_forecast.depth_available %}Model available{% else %}Not available{% endif %}</td>
+                            <td>Calculated from the trained depth-analysis model.</td>
+                        </tr>
+                        <tr>
+                            <td>Future 1/3/5/10 years</td>
+                            <td>{% if depth_forecast.future_available %}Model trend available{% else %}Not available{% endif %}</td>
+                            <td>Estimated from the current depth score.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <a href="{{ url_for('crack') }}" class="btn">Analyze Another Image</a>
+        </section>
+    {% else %}
+        <section class="card" style="text-align: center;">
+            <i class="fa-solid fa-magnifying-glass-chart" style="font-size: 3rem; color: #2563eb;"></i>
+            <h2 style="margin-top: 16px;">No result found</h2>
+            <p class="muted-text">Run Crack Analysis first. Then this page will show the real crack image measurements.</p>
+            <a class="btn" href="{{ url_for('crack') }}">Run Crack Analysis</a>
+        </section>
+    {% endif %}
+</main>
+{% endblock %}
+
+
+

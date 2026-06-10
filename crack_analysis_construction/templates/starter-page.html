@@ -1,0 +1,20 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Starter Page{% endblock %}
+
+{% block content %}
+<main class="container">
+    <section class="card" style="text-align: left;">
+        <h1>Elevate Constructors Starter</h1>
+        <p>This page connects the project entry points in one place.</p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 22px;">
+            <a class="card click-card" href="{{ url_for('home') }}">Home</a>
+            <a class="card click-card" href="{{ url_for('crack') }}">Crack Analysis</a>
+            <a class="card click-card" href="{{ url_for('projects') }}">Projects</a>
+            <a class="card click-card" href="{{ url_for('services') }}">Services</a>
+        </div>
+    </section>
+</main>
+{% endblock %}
+

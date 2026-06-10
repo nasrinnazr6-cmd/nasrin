@@ -1,0 +1,56 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Projects - Elevate Constructors{% endblock %}
+
+{% block content %}
+<section class="hero-banner compact">
+    <div class="hero-inner">
+        <h1>Projects</h1>
+        <p>Construction records, site details, and inspection status for every Elevate Constructors project.</p>
+        <div class="breadcrumb">
+            <a href="{{ url_for('home') }}">Home</a>
+            <span>/</span>
+            <span>Projects</span>
+        </div>
+    </div>
+</section>
+
+<main class="page-section">
+    <div class="section-head">
+        <div>
+            <p class="section-kicker">Portfolio</p>
+            <h2>Construction Projects</h2>
+        </div>
+        <a class="btn" href="{{ url_for('add_project') }}">
+            <i class="fa-solid fa-plus"></i>
+            Add Project
+        </a>
+    </div>
+
+    <div class="project-grid">
+        {% for project in projects %}
+            <article class="card project-card">
+                {% if loop.index0 % 3 == 0 %}
+                    <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1100&q=80" alt="{{ project['pname'] }}">
+                {% elif loop.index0 % 3 == 1 %}
+                    <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1100&q=80" alt="{{ project['pname'] }}">
+                {% else %}
+                    <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1100&q=80" alt="{{ project['pname'] }}">
+                {% endif %}
+                <div class="project-card-body">
+                    <span class="pill">{{ project["status"] }}</span>
+                    <h3 style="margin-top: 16px;">{{ project["pname"] }}</h3>
+                    <p class="accent-text" style="font-weight: 800;">{{ project["pcat"] }} / {{ project["ptype"] }}</p>
+                    <p><strong>Client:</strong> {{ project["client"] }}</p>
+                    <p><strong>Location:</strong> {{ project["location"] }}</p>
+                    <p><strong>Duration:</strong> {{ project["duration"] }}</p>
+                    <p><strong>Foundation:</strong> {{ project["ftype"] }}</p>
+                    <p style="margin-top: 12px;">{{ project["poverview"] }}</p>
+                    <a href="{{ url_for('project_details', project_id=project['id']) }}" class="btn">View Details</a>
+                </div>
+            </article>
+        {% endfor %}
+    </div>
+</main>
+{% endblock %}
+

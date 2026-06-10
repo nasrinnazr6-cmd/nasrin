@@ -1,0 +1,125 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Engineers - Elevate Constructors</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <a href="{{ url_for('home') }}" class="logo"><i class="fa-solid fa-helmet-safety"></i> Elevate Constructors</a>
+        <ul class="nav-links">
+            <li><a href="{{ url_for('home') }}">Home</a></li>
+            <li><a href="{{ url_for('projects') }}">Projects</a></li>
+            <li><a href="{{ url_for('engineers') }}">Engineers</a></li>
+            <li><a href="{{ url_for('reviews') }}">Reviews</a></li>
+            <li><a href="{{ url_for('detect') }}">Crack Analysis</a></li>
+            {% if current_user %}
+            <li>
+                <a href="{{ url_for('profile') }}" class="nav-profile">
+                    {% if current_profile and current_profile["img"] %}
+                        <img src="/{{ current_profile['img'] }}" class="nav-avatar" alt="Profile">
+                    {% else %}
+                        <span class="nav-avatar-placeholder"><i class="fa-solid fa-user"></i></span>
+                    {% endif %}
+                    {{ current_profile["name"] or current_profile["username"] if current_profile else current_user }}
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <div class="container" style="max-width: 1100px;">
+        <h1>Engineering Team</h1>
+        <p style="color: #666; margin-bottom: 25px;">
+            Add and remove site engineers manually. Records are saved in the database.
+        </p>
+
+        <div style="display: grid; grid-template-columns: minmax(280px, 380px) 1fr; gap: 25px;">
+
+            <div class="card" style="text-align: left;">
+                <h3 style="margin-bottom: 15px;">
+                    <i class="fa-solid fa-user-plus" style="color: #10b981;"></i>
+                    Add Engineer
+                </h3>
+
+                <form method="POST" action="{{ url_for('engineers') }}">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" name="name" placeholder="Engineer name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Role</label>
+                        <input type="text" name="role" placeholder="Structural Engineer" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Experience</label>
+                        <input type="text" name="experience" placeholder="5 Years">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Speciality</label>
+                        <textarea name="speciality"
+                                  rows="4"
+                                  placeholder="Concrete inspection, site safety, quality control"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Contact</label>
+                        <input type="text" name="contact" placeholder="Phone or email">
+                    </div>
+
+                    <button type="submit" class="btn">Add Engineer</button>
+                </form>
+            </div>
+
+            <div>
+                {% if engineers %}
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px;">
+                        {% for engineer in engineers %}
+                            <div class="card">
+                                <i class="fa-solid fa-user-gear"
+                                   style="font-size: 2.3rem; color: #3498db;"></i>
+
+                                <h3 style="margin-top: 12px;">{{ engineer["name"] }}</h3>
+                                <p style="color: #10b981; font-weight: 600;">{{ engineer["role"] }}</p>
+                                <p><strong>Experience:</strong> {{ engineer["experience"] or "Not added" }}</p>
+                                <p><strong>Contact:</strong> {{ engineer["contact"] or "Not added" }}</p>
+                                <p style="color: #666; margin-top: 10px;">
+                                    {{ engineer["speciality"] or "No speciality added." }}
+                                </p>
+
+                                <form method="POST"
+                                      action="{{ url_for('delete_engineer', engineer_id=engineer['id']) }}"
+                                      onsubmit="return confirm('Remove this engineer?');">
+                                    <button type="submit"
+                                            class="btn"
+                                            style="background-color: #e74c3c;">
+                                        Remove
+                                    </button>
+                                </form>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="card">
+                        <i class="fa-solid fa-user-gear"
+                           style="font-size: 2.4rem; color: #94a3b8;"></i>
+                        <p style="color: #666; margin-top: 12px;">
+                            No engineers added yet.
+                        </p>
+                    </div>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>
+

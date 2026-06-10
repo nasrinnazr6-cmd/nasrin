@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Pass/Fail Prediction</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #eef3f8;
+            color: #1f2937;
+        }
+
+        .page {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .left-panel {
+            background: #1d4ed8;
+            color: white;
+            padding: 48px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .left-panel h1 {
+            font-size: 42px;
+            margin: 0 0 16px;
+            line-height: 1.1;
+        }
+
+        .left-panel p {
+            font-size: 18px;
+            line-height: 1.6;
+            max-width: 520px;
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+            margin-top: 28px;
+            max-width: 460px;
+        }
+
+        .metric-box {
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .metric-box strong {
+            display: block;
+            font-size: 24px;
+            margin-bottom: 6px;
+        }
+
+        .right-panel {
+            padding: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .form-card {
+            width: 100%;
+            max-width: 460px;
+            background: white;
+            border-radius: 8px;
+            padding: 28px;
+            box-shadow: 0 14px 35px rgba(15, 23, 42, 0.12);
+        }
+
+        .form-card h2 {
+            margin: 0 0 8px;
+            font-size: 26px;
+        }
+
+        .form-card .subtitle {
+            margin: 0 0 24px;
+            color: #6b7280;
+        }
+
+        label {
+            display: block;
+            margin: 14px 0 6px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 22px;
+            padding: 13px;
+            border: 0;
+            border-radius: 6px;
+            background: #1d4ed8;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1e40af;
+        }
+
+        .result {
+            margin-top: 22px;
+            padding: 16px;
+            border-radius: 8px;
+            background: #eff6ff;
+            color: #1e3a8a;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            min-height: 58px;
+        }
+
+        .steps {
+            margin-top: 18px;
+            color: #6b7280;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 850px) {
+            .page {
+                grid-template-columns: 1fr;
+            }
+
+            .left-panel,
+            .right-panel {
+                padding: 28px;
+            }
+
+            .left-panel h1 {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="page">
+        <section class="left-panel">
+            <h1>Student Pass/Fail Prediction</h1>
+            <p>
+                A simple machine learning web page that predicts student performance using
+                study hours, attendance, assignment score, and previous marks.
+            </p>
+            <div class="metrics">
+                <div class="metric-box">
+                    <strong>KNN</strong>
+                    <span>Algorithm</span>
+                </div>
+                <div class="metric-box">
+                    <strong>3</strong>
+                    <span>Nearest records</span>
+                </div>
+                <div class="metric-box">
+                    <strong>18</strong>
+                    <span>Training records</span>
+                </div>
+                <div class="metric-box">
+                    <strong>4</strong>
+                    <span>Input features</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="right-panel">
+            <div class="form-card">
+                <h2>Predict Result</h2>
+                <p class="subtitle">Enter student details and click Predict.</p>
+
+                <label for="studyHours">Study Hours</label>
+                <input id="studyHours" type="number" value="6">
+
+                <label for="attendance">Attendance Percentage</label>
+                <input id="attendance" type="number" value="80">
+
+                <label for="assignmentScore">Assignment Score</label>
+                <input id="assignmentScore" type="number" value="75">
+
+                <label for="previousMarks">Previous Marks</label>
+                <input id="previousMarks" type="number" value="72">
+
+                <button onclick="predictResult()">Predict</button>
+
+                <div id="result" class="result">Predicted Result: -</div>
+
+                <div class="steps">
+                    The page compares the new student with old records and chooses the majority result from the 3 closest students.
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const kValue = 3;
+
+        const students = [
+            { studyHours: 2, attendance: 55, assignmentScore: 40, previousMarks: 45, result: "Fail" },
+            { studyHours: 3, attendance: 60, assignmentScore: 48, previousMarks: 50, result: "Fail" },
+            { studyHours: 4, attendance: 62, assignmentScore: 52, previousMarks: 55, result: "Fail" },
+            { studyHours: 5, attendance: 70, assignmentScore: 68, previousMarks: 66, result: "Pass" },
+            { studyHours: 6, attendance: 75, assignmentScore: 75, previousMarks: 72, result: "Pass" },
+            { studyHours: 7, attendance: 80, assignmentScore: 82, previousMarks: 78, result: "Pass" },
+            { studyHours: 8, attendance: 85, assignmentScore: 88, previousMarks: 84, result: "Pass" },
+            { studyHours: 1, attendance: 50, assignmentScore: 35, previousMarks: 40, result: "Fail" },
+            { studyHours: 9, attendance: 90, assignmentScore: 92, previousMarks: 89, result: "Pass" },
+            { studyHours: 3, attendance: 65, assignmentScore: 55, previousMarks: 58, result: "Fail" },
+            { studyHours: 6, attendance: 72, assignmentScore: 70, previousMarks: 69, result: "Pass" },
+            { studyHours: 4, attendance: 68, assignmentScore: 58, previousMarks: 60, result: "Fail" },
+            { studyHours: 7, attendance: 78, assignmentScore: 76, previousMarks: 74, result: "Pass" },
+            { studyHours: 2, attendance: 58, assignmentScore: 45, previousMarks: 48, result: "Fail" },
+            { studyHours: 8, attendance: 88, assignmentScore: 90, previousMarks: 86, result: "Pass" },
+            { studyHours: 5, attendance: 73, assignmentScore: 64, previousMarks: 67, result: "Pass" },
+            { studyHours: 3, attendance: 57, assignmentScore: 42, previousMarks: 46, result: "Fail" },
+            { studyHours: 6, attendance: 76, assignmentScore: 72, previousMarks: 70, result: "Pass" }
+        ];
+
+        function findDistance(student, studyHours, attendance, assignmentScore, previousMarks) {
+            const hoursDifference = student.studyHours - studyHours;
+            const attendanceDifference = student.attendance - attendance;
+            const assignmentDifference = student.assignmentScore - assignmentScore;
+            const marksDifference = student.previousMarks - previousMarks;
+
+            return Math.sqrt(
+                hoursDifference ** 2
+                + attendanceDifference ** 2
+                + assignmentDifference ** 2
+                + marksDifference ** 2
+            );
+        }
+
+        function predictResult() {
+            const studyHours = Number(document.getElementById("studyHours").value);
+            const attendance = Number(document.getElementById("attendance").value);
+            const assignmentScore = Number(document.getElementById("assignmentScore").value);
+            const previousMarks = Number(document.getElementById("previousMarks").value);
+
+            if (!studyHours || !attendance || !assignmentScore || !previousMarks) {
+                document.getElementById("result").textContent = "Please enter all values.";
+                return;
+            }
+
+            const distances = students.map(function(student) {
+                return {
+                    result: student.result,
+                    distance: findDistance(student, studyHours, attendance, assignmentScore, previousMarks)
+                };
+            });
+
+            distances.sort(function(a, b) {
+                return a.distance - b.distance;
+            });
+
+            const nearestStudents = distances.slice(0, kValue);
+            let passCount = 0;
+            let failCount = 0;
+
+            nearestStudents.forEach(function(student) {
+                if (student.result === "Pass") {
+                    passCount = passCount + 1;
+                } else {
+                    failCount = failCount + 1;
+                }
+            });
+
+            const finalResult = passCount > failCount ? "Pass" : "Fail";
+            document.getElementById("result").textContent = "Predicted Result: " + finalResult;
+        }
+    </script>
+</body>
+</html>
+

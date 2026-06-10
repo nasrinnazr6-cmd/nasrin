@@ -1,0 +1,72 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Depth Analysis - Elevate Constructors{% endblock %}
+
+{% block content %}
+<section class="hero-banner compact">
+    <div class="hero-inner">
+        <h1>Depth Analysis</h1>
+        <p>Crack measurement and depth-score analysis from saved inspection images.</p>
+        <div class="breadcrumb">
+            <a href="{{ url_for('home') }}">Home</a>
+            <span>/</span>
+            <a href="{{ url_for('detect') }}">AI Dashboard</a>
+            <span>/</span>
+            <span>Depth Analysis</span>
+        </div>
+    </div>
+</section>
+
+<main class="page-section">
+    {% if forecasts %}
+        <section class="card" style="text-align: left;">
+            <div class="section-head">
+                <div>
+                    <p class="section-kicker">Real Measurements</p>
+                    <h2>Saved crack image measurements</h2>
+                </div>
+                <a href="{{ url_for('crack') }}" class="btn">Analyze New Image</a>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Result</th>
+                            <th>Crack Pixels</th>
+                            <th>Coverage</th>
+                            <th>Regions</th>
+                            <th>Max Width</th>
+                            <th>Depth Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in forecasts %}
+                            <tr>
+                                <td>{{ row.date_time }}</td>
+                                <td>{{ row.status }}</td>
+                                <td>{{ row.crack_pixels }}</td>
+                                <td>{{ row.coverage_percent }}%</td>
+                                <td>{{ row.component_count }}</td>
+                                <td>{{ row.max_crack_width_px }} px</td>
+                                <td>{% if row.depth_available %}{{ row.current_depth_score }}{% else %}Not available{% endif %}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    {% else %}
+        <section class="card" style="text-align: center;">
+            <i class="fa-solid fa-ruler-vertical" style="font-size: 3rem; color: #2563eb;"></i>
+            <h2 style="margin-top: 16px;">No measurements yet</h2>
+            <p class="muted-text">Run Crack Analysis first. After a prediction is saved, this page will show real image measurements.</p>
+            <a href="{{ url_for('crack') }}" class="btn">Analyze Image</a>
+        </section>
+    {% endif %}
+</main>
+{% endblock %}
+
+
+

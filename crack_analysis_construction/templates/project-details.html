@@ -1,0 +1,41 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Project Details - Elevate Constructors{% endblock %}
+
+{% block content %}
+<section class="hero-banner compact">
+    <div class="hero-inner">
+        <h1>{{ project["pname"] }}</h1>
+        <p>{{ project["poverview"] }}</p>
+        <div class="breadcrumb">
+            <a href="{{ url_for('home') }}">Home</a>
+            <span>/</span>
+            <a href="{{ url_for('projects') }}">Projects</a>
+            <span>/</span>
+            <span>Details</span>
+        </div>
+    </div>
+</section>
+
+<main class="page-section">
+    <section class="card" style="text-align: left;">
+        <span class="pill">{{ project["status"] }}</span>
+        <h2 style="margin-top: 16px;">{{ project["pname"] }}</h2>
+        <p>{{ project["sdesc"] }}</p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; margin-top: 28px;">
+            <p><strong>Category:</strong> {{ project["pcat"] }}</p>
+            <p><strong>Type:</strong> {{ project["ptype"] }}</p>
+            <p><strong>Client:</strong> {{ project["client"] }}</p>
+            <p><strong>Location:</strong> {{ project["location"] }}</p>
+            <p><strong>Duration:</strong> {{ project["duration"] }}</p>
+            <p><strong>Area:</strong> {{ project["area"] }}</p>
+            <p><strong>Foundation:</strong> {{ project["ftype"] }}</p>
+            <p><strong>Material:</strong> {{ project["fmaterial"] }}</p>
+            <p><strong>Height:</strong> {{ project["bheight"] }}</p>
+            <p><strong>Engineer Rate:</strong> {{ project["erate"] }}</p>
+        </div>
+    </section>
+</main>
+{% endblock %}
+

@@ -1,0 +1,182 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Crack Analysis - Elevate Constructors{% endblock %}
+
+{% block content %}
+<section class="hero-banner compact">
+    <div class="hero-inner">
+        <h1>Crack Analysis</h1>
+        <p>Upload a concrete or bridge surface image and generate a real image-based crack report.</p>
+        <div class="breadcrumb">
+            <a href="{{ url_for('home') }}">Home</a>
+            <span>/</span>
+            <a href="{{ url_for('detect') }}">AI Dashboard</a>
+            <span>/</span>
+            <span>Crack Analysis</span>
+        </div>
+    </div>
+</section>
+
+<main class="page-section">
+    <section class="analysis-layout">
+        <div class="analysis-main card">
+            <div class="section-head">
+                <div>
+                    <p class="section-kicker">Image Input</p>
+                    <h2>Analyze Surface Image</h2>
+                </div>
+                <span class="pill">JPG / PNG</span>
+            </div>
+
+            <form id="crackForm" enctype="multipart/form-data">
+                <label id="dropZone" class="upload-zone" for="image">
+                    <input type="file" id="image" name="image" accept="image/*" required>
+                    <div id="uploadPrompt">
+                        <span class="upload-icon">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                        </span>
+                        <h3>Drop concrete image here</h3>
+                        <p>or click to browse from your computer</p>
+                    </div>
+                    <img id="previewImage" src="#" alt="Selected surface preview">
+                </label>
+
+                <div class="analysis-actions">
+                    <button class="btn" type="submit">
+                        <i class="fa-solid fa-magnifying-glass-chart"></i>
+                        Analyze Image
+                    </button>
+                    <button class="btn secondary-btn" id="clearBtn" type="button">
+                        <i class="fa-solid fa-rotate-left"></i>
+                        Clear
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <aside class="analysis-side">
+            <div class="card info-card">
+                <span class="icon-badge"><i class="fa-solid fa-camera"></i></span>
+                <h3>Best Image Tips</h3>
+                <p>Use a clear, close photo of the surface. Avoid heavy shadows, glare, blur, and very distant images.</p>
+            </div>
+            <div class="card info-card">
+                <span class="icon-badge"><i class="fa-solid fa-ruler-combined"></i></span>
+                <h3>Real Measurements</h3>
+                <p>The result page shows crack area, coverage, connected regions, and maximum width in pixels.</p>
+            </div>
+            <div class="card info-card">
+                <span class="icon-badge"><i class="fa-solid fa-circle-info"></i></span>
+                <h3>Depth Note</h3>
+                <p>Depth score is calculated for valid construction surface images.</p>
+            </div>
+        </aside>
+    </section>
+
+    <section id="resultBox" class="analysis-result card" style="display: none;"></section>
+</main>
+
+<script>
+const form = document.getElementById("crackForm");
+const fileInput = document.getElementById("image");
+const previewImage = document.getElementById("previewImage");
+const uploadPrompt = document.getElementById("uploadPrompt");
+const resultBox = document.getElementById("resultBox");
+const clearBtn = document.getElementById("clearBtn");
+
+function resetUpload() {
+    form.reset();
+    previewImage.style.display = "none";
+    previewImage.src = "#";
+    uploadPrompt.style.display = "grid";
+    resultBox.style.display = "none";
+    resultBox.innerHTML = "";
+}
+
+fileInput.addEventListener("change", () => {
+    const file = fileInput.files[0];
+    if (!file) return;
+
+    previewImage.src = URL.createObjectURL(file);
+    previewImage.style.display = "block";
+    uploadPrompt.style.display = "none";
+});
+
+clearBtn.addEventListener("click", resetUpload);
+
+form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    if (!fileInput.files.length) {
+        resultBox.style.display = "block";
+        resultBox.innerHTML = `
+            <p class="section-kicker">Missing Image</p>
+            <h3>Please choose an image first.</h3>
+        `;
+        return;
+    }
+
+    resultBox.style.display = "block";
+    resultBox.innerHTML = `
+        <div class="loading-result">
+            <i class="fa-solid fa-gear fa-spin"></i>
+            <div>
+                <p class="section-kicker">Processing</p>
+                <h3>Analyzing surface image...</h3>
+                <p class="muted-text">The system is checking the uploaded construction surface image.</p>
+            </div>
+        </div>
+    `;
+
+    const response = await fetch("{{ url_for('predict') }}", {
+        method: "POST",
+        body: new FormData(form)
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+        resultBox.innerHTML = `
+            <p class="section-kicker">Upload Failed</p>
+            <h3>${data.error || "Something went wrong."}</h3>
+        `;
+        return;
+    }
+
+    resultBox.innerHTML = `
+        <div class="section-head">
+            <div>
+                <p class="section-kicker">Analysis Complete</p>
+                <h2>${data.status}</h2>
+            </div>
+            <span class="pill">${data.severity}</span>
+        </div>
+
+        <div class="result-grid">
+            <div class="metric-tile">
+                <span>Confidence</span>
+                <strong>${data.confidence}%</strong>
+            </div>
+            <div class="metric-tile">
+                <span>Severity</span>
+                <strong>${data.severity}</strong>
+            </div>
+            <div class="metric-tile">
+                <span>Report</span>
+                <strong>Saved</strong>
+            </div>
+        </div>
+
+        <p class="muted-text">Prediction report saved successfully.</p>
+
+        <a class="btn" href="{{ url_for('crack_result') }}">
+            <i class="fa-solid fa-file-lines"></i>
+            View Full Result
+        </a>
+    `;
+});
+</script>
+{% endblock %}
+
+
+

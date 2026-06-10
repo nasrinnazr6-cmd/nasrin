@@ -1,0 +1,49 @@
+﻿{% extends "base.html" %}
+
+{% block title %}About - Elevate Constructors{% endblock %}
+
+{% block content %}
+<section class="hero-banner compact">
+    <div class="hero-inner">
+        <h1>About</h1>
+        <p>Elevate Constructors makes construction inspection faster, clearer, and easier to present.</p>
+        <div class="breadcrumb">
+            <a href="{{ url_for('home') }}">Home</a>
+            <span>/</span>
+            <span>About</span>
+        </div>
+    </div>
+</section>
+
+<main class="page-section">
+    <section class="card" style="text-align: left;">
+        <div class="section-head">
+            <div>
+                <p class="section-kicker">About The Project</p>
+                <h2>Construction management with AI crack analysis</h2>
+            </div>
+        </div>
+
+        <p>Elevate Constructors helps users manage construction projects, engineers, reviews, and crack inspection reports from one web application.</p>
+
+        <div class="service-grid" style="margin-top: 28px;">
+            <div class="card" style="text-align: left;">
+                <span class="icon-badge"><i class="fa-solid fa-upload"></i></span>
+                <h3>Upload Image</h3>
+                <p>Users upload a concrete or bridge surface image through the crack analysis dashboard.</p>
+            </div>
+            <div class="card" style="text-align: left;">
+                <span class="icon-badge"><i class="fa-solid fa-microchip"></i></span>
+                <h3>Analyze</h3>
+                <p>The app processes the image and highlights crack-like regions for quick inspection.</p>
+            </div>
+            <div class="card" style="text-align: left;">
+                <span class="icon-badge"><i class="fa-solid fa-chart-line"></i></span>
+                <h3>Report</h3>
+                <p>Results are stored with confidence, severity, history, and analytics.</p>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}
+

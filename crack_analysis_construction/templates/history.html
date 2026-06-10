@@ -1,0 +1,194 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction History - Elevate Constructors</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+
+    <nav class="navbar">
+
+        <a href="{{ url_for('home') }}" class="logo">
+            <i class="fa-solid fa-microchip"></i> Elevate Constructors
+        </a>
+
+        <ul class="nav-links">
+
+            <li><a href="{{ url_for('home') }}">Home</a></li>
+            <li><a href="{{ url_for('about') }}">About</a></li>
+            <li><a href="{{ url_for('contact') }}">Contact</a></li>
+            <li><a href="{{ url_for('history') }}">History</a></li>
+            <li><a href="{{ url_for('analytics') }}">Analytics</a></li>
+            <li>
+                <a href="{{ url_for('profile') }}" class="nav-profile">
+                    {% if current_profile and current_profile["img"] %}
+                        <img src="/{{ current_profile['img'] }}" class="nav-avatar" alt="Profile">
+                    {% else %}
+                        <span class="nav-avatar-placeholder"><i class="fa-solid fa-user"></i></span>
+                    {% endif %}
+                    {{ current_profile["name"] or current_profile["username"] if current_profile else current_user }}
+                </a>
+            </li>
+            <li>
+                <a href="{{ url_for('logout') }}"
+                   style="color: #e74c3c;">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    Logout
+                </a>
+            </li>
+
+        </ul>
+
+    </nav>
+
+    <div class="app-shell">
+        <aside class="side-profile">
+            {% if current_profile and current_profile["img"] %}
+                <img src="/{{ current_profile['img'] }}" class="side-avatar" alt="Profile">
+            {% else %}
+                <div class="side-avatar-placeholder"><i class="fa-solid fa-user"></i></div>
+            {% endif %}
+            <h3>{{ current_profile["name"] or current_profile["username"] if current_profile else current_user }}</h3>
+            <p>{{ current_profile["username"] if current_profile else "" }}</p>
+            <div class="side-links">
+                <a href="{{ url_for('profile') }}"><i class="fa-solid fa-id-card"></i> Profile Details</a>
+                <a href="{{ url_for('detect') }}"><i class="fa-solid fa-microchip"></i> Crack Analysis</a>
+                <a href="{{ url_for('history') }}"><i class="fa-solid fa-clock-rotate-left"></i> History</a>
+                <a href="{{ url_for('analytics') }}"><i class="fa-solid fa-chart-line"></i> Analytics</a>
+            </div>
+        </aside>
+
+        <main class="shell-content">
+
+    <div class="container" style="max-width: 1100px;">
+
+        <div class="card" style="text-align: left;">
+
+            <h2>
+                <i class="fa-solid fa-clock-rotate-left"
+                   style="color: #3498db;"></i>
+                Prediction History
+            </h2>
+
+            <p style="color: #666; margin-bottom: 25px;">
+                Your saved Crack Analysis results from the database.
+            </p>
+
+            {% if predictions %}
+
+                <div style="overflow-x: auto;">
+
+                    <table style="
+                        width: 100%;
+                        border-collapse: collapse;
+                        font-size: 0.92rem;
+                    ">
+
+                        <thead>
+                            <tr style="background: #f8fafc;">
+                                <th style="padding: 12px; border: 1px solid #e2e8f0;">Original</th>
+                                <th style="padding: 12px; border: 1px solid #e2e8f0;">Detected</th>
+                                <th style="padding: 12px; border: 1px solid #e2e8f0;">Result</th>
+                                <th style="padding: 12px; border: 1px solid #e2e8f0;">Severity</th>
+                                <th style="padding: 12px; border: 1px solid #e2e8f0;">Confidence</th>
+                                <th style="padding: 12px; border: 1px solid #e2e8f0;">Date & Time</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for item in predictions %}
+                                <tr>
+                                    <td style="padding: 12px; border: 1px solid #e2e8f0;">
+                                        {% if item["orginal_image"] %}
+                                            <img src="/{{ item['orginal_image'] }}"
+                                                 alt="Uploaded crack image"
+                                                 style="
+                                                    width: 90px;
+                                                    height: 70px;
+                                                    object-fit: cover;
+                                                    border-radius: 6px;
+                                                    border: 1px solid #e2e8f0;
+                                                 ">
+                                        {% else %}
+                                            No image
+                                        {% endif %}
+                                    </td>
+
+                                    <td style="padding: 12px; border: 1px solid #e2e8f0;">
+                                        {% if item["pred_image"] %}
+                                            <img src="/{{ item['pred_image'] }}"
+                                                 alt="Detected crack image"
+                                                 style="
+                                                    width: 90px;
+                                                    height: 70px;
+                                                    object-fit: cover;
+                                                    border-radius: 6px;
+                                                    border: 1px solid #e2e8f0;
+                                                 ">
+                                        {% else %}
+                                            No image
+                                        {% endif %}
+                                    </td>
+
+                                    <td style="padding: 12px; border: 1px solid #e2e8f0;">
+                                        {{ item["pred_result"] }}
+                                    </td>
+
+                                    <td style="padding: 12px; border: 1px solid #e2e8f0;">
+                                        {{ item["avg_depths"] }}
+                                    </td>
+
+                                    <td style="padding: 12px; border: 1px solid #e2e8f0;">
+                                        {{ item["confidence"] }}%
+                                    </td>
+
+                                    <td style="padding: 12px; border: 1px solid #e2e8f0;">
+                                        {{ item["date_time"] }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            {% else %}
+
+                <div style="
+                    background: #f8fafc;
+                    border: 1px solid #e2e8f0;
+                    border-radius: 8px;
+                    padding: 35px;
+                    text-align: center;
+                    color: #64748b;
+                ">
+
+                    <i class="fa-solid fa-database"
+                       style="font-size: 2.5rem; margin-bottom: 12px;"></i>
+
+                    <p>No prediction records found yet.</p>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+        </main>
+    </div>
+
+</body>
+</html>
+
